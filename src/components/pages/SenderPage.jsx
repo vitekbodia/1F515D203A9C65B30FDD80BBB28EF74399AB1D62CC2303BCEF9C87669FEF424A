@@ -8,7 +8,8 @@ import {
   Input,
   RangeInput,
   RangeInputLabel,
-  GalleryImage
+  GalleryImage,
+  TextInfo
 } from "../../ui/atoms";
 import { SenderPrefs, PrefItem, PrefGroup } from "../../ui/organisms";
 import {
@@ -179,7 +180,7 @@ class SenderPage extends Component {
           {props => (
             <React.Fragment>
               <ProfileBackground
-                img="https://superg.ru/wp-content/uploads/2018/09/mojave_dynamic-0010.png"
+                img="https://images.wallpaperscraft.com/image/mac_os_x_apple_mavericks_waves_wave_94219_1280x800.jpg"
                 style={props}
               />
               <SenderPrefs style={props}>
@@ -246,7 +247,7 @@ class SenderPage extends Component {
                       onChange={e => this.selectMode(e.target.value)}
                     />
                     <PrefItem htmlFor="bmAll">
-                      <i className="far fa-bookmark" />
+                    <i className="fas fa-bookmark"></i>
                     </PrefItem>
                     <label
                       className="form-switch"
@@ -261,9 +262,9 @@ class SenderPage extends Component {
                     <RangeInputLabel>
                       <RangeInput
                         type="range"
-                        min={5}
-                        max={300}
-                        step={5}
+                        min={10}
+                        max={120}
+                        step={10}
                         value={this.props.mpm}
                         onChange={this.onRangeChange}
                       />
@@ -274,6 +275,7 @@ class SenderPage extends Component {
 
                 <PrefGroup msgAttach>
                   <Modal w="600px" h="300px" bg="#efefef" message>
+                    <TextInfo>{this.props.message.length}</TextInfo>
                     <Message
                       style={{ resize: "none" }}
                       placeholder={`Type your ${

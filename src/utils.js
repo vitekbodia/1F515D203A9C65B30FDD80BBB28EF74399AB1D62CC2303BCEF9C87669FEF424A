@@ -33,7 +33,7 @@ export const sendToChat = (
 
         const interval = setInterval(() => {
           if (!splitMessage.length) {
-            sentMales.push(...data.map(male => male.id));
+            sentMales.push(...data.map(male => "" + male.id));
             clearInterval(interval);
             offset += data.length;
             sendToChat(
@@ -61,7 +61,7 @@ export const sendToChat = (
           }
 
           if (
-            sentMales.includes(data[idx].id) ||
+            sentMales.includes("" + data[idx].id) ||
             blacklist.includes(data[idx].id)
           ) {
             console.log(`[${data[idx].id}] already sent || blacklist`);
@@ -70,7 +70,7 @@ export const sendToChat = (
           }
 
           if (mode !== "activeDialogs" && mode !== "bmAll") {
-            if (bookmarks.includes(data[idx].id)) {
+            if (bookmarks.includes("" + data[idx].id)) {
               console.log("bm mode || bookmark");
               console.log(data[idx].id);
 
@@ -111,7 +111,7 @@ export const sendToChat = (
 
       const interval = setInterval(() => {
         if (!splitMessage.length) {
-          sentMales.push(...data.users.map(male => male.id));
+          sentMales.push(...data.users.map(male => "" + male.id));
           clearInterval(interval);
           offset = offset - 1;
           sendToChat(
@@ -139,7 +139,7 @@ export const sendToChat = (
         }
 
         if (
-          sentMales.includes(data.users[idx].id) ||
+          sentMales.includes("" + data.users[idx].id) ||
           blacklist.includes(data.users[idx].id)
         ) {
           console.log(`[${data.users[idx].id}] already sent || blacklist`);
@@ -147,7 +147,7 @@ export const sendToChat = (
           return;
         }
 
-        if (bookmarks.includes(data.users[idx].id)) {
+        if (bookmarks.includes("" + data.users[idx].id)) {
           console.log("bm mode || bookmark");
           idx++;
           return;
@@ -207,7 +207,7 @@ export const loadBookmars = (bmOffset, bookmarks, cursor, dispatchFn) => {
           loadBookmars(bmOffset, bookmarks, cursor, dispatchFn);
         }
 
-        bookmarks.push(data[bmIdx].id);
+        bookmarks.push("" + data[bmIdx].id);
       }
     },
     cursor

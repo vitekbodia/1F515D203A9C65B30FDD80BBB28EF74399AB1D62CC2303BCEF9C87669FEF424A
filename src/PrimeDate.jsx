@@ -9,7 +9,7 @@ import "./ui/pages/resets.css";
 import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import { connect } from "react-redux";
 import { SET_FEMALE_DATA } from "./redux/actions";
-import { ArrowButton } from "./ui/atoms";
+import { ArrowButton, TextInfoCredits } from "./ui/atoms";
 import TopPanel from "./components/organisms/TopPanel";
 import { TOGGLE_TOP_PANEL } from "./redux/ui/uiActions";
 
@@ -58,6 +58,10 @@ class PrimeDate extends Component {
         {this.props.showProfilePage && <ProfilePage />}
         {this.props.showSenderPage && <SenderPage />}
         {this.props.showMailingPage && <MailingPage />}
+
+        <TextInfoCredits href="https://t.me/bodiavaleur" target="_blank">
+          by Bodyan with <i className="fas fa-heart" />
+        </TextInfoCredits>
       </React.Fragment>
     );
   }

@@ -12,6 +12,7 @@ export const Message = styled.textarea`
   color: rgb(28, 28, 30);
   font-family: "SF Display", Arial, Helvetica, sans-serif;
   font-weight: 500;
+  line-height: 1.3rem;
   overflow-y: scroll;
 
   ::placeholder {

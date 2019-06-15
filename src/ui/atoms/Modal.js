@@ -64,6 +64,24 @@ ${({ attachments }) =>
   margin-top: 25px;
   `}
 
+${({ displayMessage }) =>
+  displayMessage &&
+  `
+  margin: 25px 0;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  font-family: 'SF Display', Arial;
+  padding: 15px;
+  overflow-y: scroll;
+  height: auto;
+  min-height: auto;
+
+  ::-webkit-scrollbar { 
+    display: none; 
+}
+  `}
+
 ${({ blacklist }) =>
   blacklist &&
   `

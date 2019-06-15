@@ -24,7 +24,7 @@ const initialState = {
   },
   mode: "online",
   message: "",
-  mpm: 20,
+  mpm: 40,
   bookmarks: [],
   sendType: "chat",
   attachments: [],

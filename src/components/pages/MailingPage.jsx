@@ -4,7 +4,11 @@ import {
   ProfileBackground,
   MainInfoWrapper,
   InfoTitle,
-  Loading
+  Loading,
+  Modal,
+  DisplayMessages,
+  TextInfoCredits,
+  TextInfoMailing
 } from "../../ui/atoms";
 import { PrefItem } from "../../ui/organisms";
 import { LAUNCH_SENDER, SET_SENT_COUNT } from "../../redux/actions";
@@ -39,13 +43,25 @@ class MailingPage extends Component {
                 img="https://superg.ru/wp-content/uploads/2018/09/mojave_dynamic-0020.png"
                 style={props}
               />
+              <DisplayMessages>
+                {this.props.message.split(" @ ").map(msg => (
+                  <Modal displayMessage w="350px" h="150px" bg="#333333">
+                    {msg}
+                  </Modal>
+                ))}
+              </DisplayMessages>
               <MainInfoWrapper style={props}>
                 <Loading src="http://www.wallies.com/filebin/images/loading_apple.gif" />
                 <InfoTitle>Sent: {this.props.sentCount}</InfoTitle>
+
                 <PrefItem onClick={this.stopSender}>
                   <i className="fas fa-times" />
                 </PrefItem>
               </MainInfoWrapper>
+
+              <TextInfoMailing>
+                Bookmarks: {this.props.bookmarks.length} MPM: {this.props.mpm}
+              </TextInfoMailing>
             </React.Fragment>
           )}
         </Spring>
@@ -56,7 +72,10 @@ class MailingPage extends Component {
 
 const mapStateToProps = state => ({
   sentCount: state.pdReducer.sentCount,
-  senderLaunch: state.pdReducer.senderLaunch
+  senderLaunch: state.pdReducer.senderLaunch,
+  message: state.pdReducer.message,
+  bookmarks: state.pdReducer.bookmarks,
+  mpm: state.pdReducer.mpm
 });
 
 export default connect(mapStateToProps)(MailingPage);

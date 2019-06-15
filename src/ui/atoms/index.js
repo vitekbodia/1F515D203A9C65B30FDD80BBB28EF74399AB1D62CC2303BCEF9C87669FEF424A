@@ -10,3 +10,5 @@ export { Input, RangeInput, RangeInputLabel } from "./Inputs";
 export { GalleryImage } from "./GalleryImage";
 export { MainInfoWrapper, InfoTitle } from "./Info";
 export { Loading } from "./Loading";
+export { TextInfo, TextInfoCredits, TextInfoMailing } from "./TextInfo";
+export { DisplayMessages } from "./DisplayMessages";

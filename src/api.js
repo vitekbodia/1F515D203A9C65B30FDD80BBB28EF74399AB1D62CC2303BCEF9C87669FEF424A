@@ -5,6 +5,7 @@ const axs = axios.create({
   mode: "cors",
   withCredentials: true,
   referrer: "https://prime.date/",
+  "X-Remote-IP": "127.0.0.1",
   referrerPolicy: "no-referrer-when-downgrade",
   headers: { accept: "application/json", "content-type": "application/json" }
 });
