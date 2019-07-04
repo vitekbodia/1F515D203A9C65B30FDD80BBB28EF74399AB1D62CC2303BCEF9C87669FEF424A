@@ -18,4 +18,8 @@ export const Message = styled.textarea`
   ::placeholder {
     color: rgb(99, 99, 102);
   }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;

@@ -7,13 +7,20 @@ import {
   Loading,
   Modal,
   DisplayMessages,
-  TextInfoCredits,
-  TextInfoMailing
+  TextInfoMailing,
+  TextInfoMailingWrap
 } from "../../ui/atoms";
 import { PrefItem } from "../../ui/organisms";
-import { LAUNCH_SENDER, SET_SENT_COUNT } from "../../redux/actions";
+import {
+  LAUNCH_SENDER,
+  SET_SENT_COUNT,
+  CLEAR_SENT_MALES,
+  CLEAR_ATTACHMENTS,
+  CLEAR_BOOKMARKS
+} from "../../redux/actions";
 import { TOGGLE_SENDER_PAGE } from "../../redux/ui/uiActions";
 import { Spring } from "react-spring/renderprops";
+import Timer from "react-compound-timer";
 
 class MailingPage extends Component {
   constructor(props) {
@@ -30,6 +37,9 @@ class MailingPage extends Component {
     }
 
     this.props.dispatch({ type: LAUNCH_SENDER, payload: false });
+    this.props.dispatch({ type: CLEAR_SENT_MALES });
+    this.props.dispatch({ type: CLEAR_ATTACHMENTS });
+    this.props.dispatch({ type: CLEAR_BOOKMARKS });
     this.props.dispatch({ type: TOGGLE_SENDER_PAGE });
   }
 
@@ -40,7 +50,7 @@ class MailingPage extends Component {
           {props => (
             <React.Fragment>
               <ProfileBackground
-                img="https://superg.ru/wp-content/uploads/2018/09/mojave_dynamic-0020.png"
+                img="https://wallpapersite.com/images/pages/pic_w/18199.jpg"
                 style={props}
               />
               <DisplayMessages>
@@ -59,9 +69,23 @@ class MailingPage extends Component {
                 </PrefItem>
               </MainInfoWrapper>
 
-              <TextInfoMailing>
-                Bookmarks: {this.props.bookmarks.length} MPM: {this.props.mpm}
-              </TextInfoMailing>
+              <TextInfoMailingWrap>
+                <TextInfoMailing>
+                  Bookmarks: {this.props.bookmarks.length}
+                </TextInfoMailing>
+                <TextInfoMailing>MPM: {this.props.mpm}</TextInfoMailing>
+                <TextInfoMailing>
+                  Online: {this.props.currentOnline}
+                </TextInfoMailing>
+                <TextInfoMailing>
+                  Time:{" "}
+                  <Timer formatValue={(value) => `${(value < 10 ? `0${value}` : value)}`}>
+                    <Timer.Hours formatValue={value => `${value}:`} />
+                    <Timer.Minutes formatValue={value => `${value}:`}/>
+                    <Timer.Seconds formatValue={value => `${value}`} />
+                  </Timer>
+                </TextInfoMailing>
+              </TextInfoMailingWrap>
             </React.Fragment>
           )}
         </Spring>
@@ -75,7 +99,8 @@ const mapStateToProps = state => ({
   senderLaunch: state.pdReducer.senderLaunch,
   message: state.pdReducer.message,
   bookmarks: state.pdReducer.bookmarks,
-  mpm: state.pdReducer.mpm
+  mpm: state.pdReducer.mpm,
+  currentOnline: state.pdReducer.currentOnline
 });
 
 export default connect(mapStateToProps)(MailingPage);

@@ -27,13 +27,20 @@ export const TextInfoCredits = styled.a`
 `;
 
 export const TextInfoMailing = styled.span`
-  position: absolute;
   color: white;
-  right: 10px;
   font-family: "SF Display", Arial, Helvetica, sans-serif;
   font-size: 0.8rem;
   font-weight: 300;
   opacity: 0.7;
   text-decoration: none;
+  margin: 3px 0;
+`;
+
+export const TextInfoMailingWrap = styled.div`
+  position: absolute;
+  right: 10px;
   top: 10px;
+
+  display: flex;
+  flex-direction: column;
 `;

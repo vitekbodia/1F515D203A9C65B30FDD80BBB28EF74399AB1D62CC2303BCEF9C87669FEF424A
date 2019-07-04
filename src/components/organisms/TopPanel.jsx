@@ -40,10 +40,12 @@ class TopPanel extends Component {
       <React.Fragment>
         <Spring
           from={{
-            opacity: 0
+            position: "absolute",
+            top: "-50px"
           }}
           to={{
-            opacity: 0.6
+            position: "absolute",
+            top: "0"
           }}
         >
           {props => (
@@ -66,7 +68,7 @@ class TopPanel extends Component {
           )}
         </Spring>
 
-        <Shade onClick={this.props.toggleTopPanel} />
+        <Shade onClick={this.props.toggleTopPanel} full />
       </React.Fragment>
     );
   }

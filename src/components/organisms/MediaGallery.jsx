@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Modal, GalleryImage, Shade } from "../../ui/atoms";
-import { SELECT_IMAGE } from "../../redux/actions";
+import { SELECT_ATTACHMENT } from "../../redux/actions";
 import { getMediaGallery } from "../../api";
 import { connect } from "react-redux";
 
@@ -16,7 +16,7 @@ class MediaGallery extends Component {
   }
 
   selectImage(img) {
-    return this.props.dispatch({ type: SELECT_IMAGE, payload: img });
+    return this.props.dispatch({ type: SELECT_ATTACHMENT, payload: img });
   }
 
   componentDidMount() {

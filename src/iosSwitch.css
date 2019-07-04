@@ -13,6 +13,7 @@
     border-radius: 23px;
     vertical-align: text-bottom;
     transition: all 0.3s linear;
+    margin-left: 10px;
   }
   .form-switch i::before {
     content: "";

@@ -1,4 +1,4 @@
-export { Modal } from "./Modal";
+export { Modal, ModalGroup } from "./Modal";
 export { ProfileBackground } from "./ProfileBackground";
 export { ProfileAvatar, ProfileText } from "./Profile";
 export { ArrowButton } from "./ArrowButton";
@@ -10,5 +10,11 @@ export { Input, RangeInput, RangeInputLabel } from "./Inputs";
 export { GalleryImage } from "./GalleryImage";
 export { MainInfoWrapper, InfoTitle } from "./Info";
 export { Loading } from "./Loading";
-export { TextInfo, TextInfoCredits, TextInfoMailing } from "./TextInfo";
+export {
+  TextInfo,
+  TextInfoCredits,
+  TextInfoMailing,
+  TextInfoMailingWrap
+} from "./TextInfo";
 export { DisplayMessages } from "./DisplayMessages";
+export { AttachIcon, AttachIconLabel } from "./AttachIcon";

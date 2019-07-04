@@ -5,11 +5,9 @@ import {
   Modal,
   Message,
   ButtonStart,
-  Input,
-  RangeInput,
-  RangeInputLabel,
   GalleryImage,
-  TextInfo
+  TextInfo,
+  ModalGroup
 } from "../../ui/atoms";
 import { SenderPrefs, PrefItem, PrefGroup } from "../../ui/organisms";
 import {
@@ -19,28 +17,39 @@ import {
   SET_MPM,
   SET_BOOKMARKS,
   SET_SEND_TYPE,
-  REMOVE_IMAGE,
+  REMOVE_ATTACHMENT,
   SET_BLACKLIST,
   SET_SENT_COUNT,
-  LAUNCH_SENDER
+  LAUNCH_SENDER,
+  SET_SENT_MALES,
+  SET_CURRENT_ONLINE,
+  TOGGLE_LIKE,
+  TOGGLE_FAVORITE,
+  TOGGLE_IGNORE_BM
 } from "../../redux/actions";
 import {
   TOGGLE_MEDIA_GALLERY,
   TOGGLE_BLACKLIST,
-  TOGGLE_MAILING_PAGE
+  TOGGLE_MAILING_PAGE,
+  TOGGLE_ATTACHMENTS
 } from "../../redux/ui/uiActions";
-import { fetchAllMales } from "../../api";
+import { fetchAllMales, getStickers } from "../../api";
 import { sendToChat, loadBookmars } from "../../utils";
 import MediaGallery from "../organisms/MediaGallery";
-import Blacklist from "../../molecules/Blacklist";
+import Blacklist from "../molecules/Blacklist";
 import { Spring } from "react-spring/renderprops";
+import Slider from "react-rangeslider";
+import "react-rangeslider/lib/index.css";
+import MessageBlock from "../molecules/MessageBlock";
+import Attachments from "../organisms/Attachments";
 
 class SenderPage extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      online: 0
+      online: 0,
+      packs: []
     };
 
     this.selectMode = this.selectMode.bind(this);
@@ -53,6 +62,10 @@ class SenderPage extends Component {
     this.removeImage = this.removeImage.bind(this);
     this.changeCount = this.changeCount.bind(this);
     this.toggleOnline = this.toggleOnline.bind(this);
+    this.toggleAttachments = this.toggleAttachments.bind(this);
+    this.toggleLike = this.toggleLike.bind(this);
+    this.toggleFavorite = this.toggleFavorite.bind(this);
+    this.toggleIgnoreBm = this.toggleIgnoreBm.bind(this);
   }
 
   selectMode(value) {
@@ -95,6 +108,14 @@ class SenderPage extends Component {
     this.props.dispatch({ type: SET_MODE, payload: mode });
   }
 
+  toggleAttachments() {
+    return this.props.dispatch({ type: TOGGLE_ATTACHMENTS });
+  }
+
+  toggleIgnoreBm() {
+    return this.props.dispatch({ type: TOGGLE_IGNORE_BM });
+  }
+
   toggleOnline() {
     return async () => {
       await this.setState({ online: !this.state.online });
@@ -102,20 +123,32 @@ class SenderPage extends Component {
     };
   }
 
+  toggleLike() {
+    return this.props.dispatch({ type: TOGGLE_LIKE });
+  }
+
+  toggleFavorite() {
+    return this.props.dispatch({ type: TOGGLE_FAVORITE });
+  }
+
   onMessageChange(evt) {
     const { value } = evt.target;
     return this.props.dispatch({ type: SET_MESSAGE, payload: value });
   }
 
-  onRangeChange(evt) {
-    const { value } = evt.target;
+  onRangeChange(value) {
     return this.props.dispatch({ type: SET_MPM, payload: parseInt(value) });
   }
 
   startSender() {
     this.props.dispatch({ type: TOGGLE_MAILING_PAGE });
     this.props.dispatch({ type: LAUNCH_SENDER, payload: true });
-    fetchAllMales(0, data =>
+
+    const dispatchSentMales = maleId =>
+      this.props.dispatch({ type: SET_SENT_MALES, payload: maleId });
+
+    fetchAllMales(0, data => {
+      this.props.dispatch({ type: SET_CURRENT_ONLINE, payload: data.count });
       sendToChat(
         this.props.modeFilters,
         this.props.modelData.id,
@@ -129,9 +162,12 @@ class SenderPage extends Component {
         this.props.attachments,
         this.props.blacklist,
         this.changeCount,
-        true
-      )
-    );
+        true,
+        this.props.likeUser,
+        this.props.favUser,
+        this.props.ignoreBm
+      );
+    });
   }
 
   changeCount(counter) {
@@ -152,7 +188,7 @@ class SenderPage extends Component {
   }
 
   removeImage(imgId) {
-    return this.props.dispatch({ type: REMOVE_IMAGE, payload: imgId });
+    return this.props.dispatch({ type: REMOVE_ATTACHMENT, payload: imgId });
   }
 
   componentDidMount() {
@@ -170,17 +206,21 @@ class SenderPage extends Component {
         });
       }
     }
+
+    getStickers(packs => this.setState({ packs: packs }));
   }
 
   render() {
     console.log(this.props, this.state);
+    const messages = this.props.message.split(" @ ").filter(x => !!x);
+    const mpm = this.props.mpm;
     return (
       <React.Fragment>
         <Spring from={{ opacity: 0 }} to={{ opacity: 1 }}>
           {props => (
             <React.Fragment>
               <ProfileBackground
-                img="https://images.wallpaperscraft.com/image/mac_os_x_apple_mavericks_waves_wave_94219_1280x800.jpg"
+                img="https://wallpapersite.com/images/pages/pic_w/18203.jpg"
                 style={props}
               />
               <SenderPrefs style={props}>
@@ -208,7 +248,7 @@ class SenderPage extends Component {
                     </PrefItem>
                   </Modal>
 
-                  <Modal w="150px" h="190px" bg="#efefef" prefGroup>
+                  <Modal w="150px" h="150px" bg="#efefef" prefGroup>
                     <input
                       type="radio"
                       name="senderMode"
@@ -247,35 +287,58 @@ class SenderPage extends Component {
                       onChange={e => this.selectMode(e.target.value)}
                     />
                     <PrefItem htmlFor="bmAll">
-                    <i className="fas fa-bookmark"></i>
+                      <i className="fas fa-bookmark" />
                     </PrefItem>
+                  </Modal>
+
+                  <Modal w="150px" h="135px" bg="#efefef" switches>
                     <label
                       className="form-switch"
                       onChange={this.toggleOnline()}
                     >
+                      <span class="fas fa-signal" />
+                      <input type="checkbox" />
+                      <i />
+                    </label>
+                    <label className="form-switch" onChange={this.toggleLike}>
+                      <span class="fas fa-heart" />
+                      <input type="checkbox" />
+                      <i />
+                    </label>
+                    <label
+                      className="form-switch"
+                      onChange={this.toggleFavorite}
+                    >
+                      <span class="fas fa-star" />
+                      <input type="checkbox" />
+                      <i />
+                    </label>
+                    <label
+                      className="form-switch"
+                      onChange={this.toggleIgnoreBm}
+                    >
+                      <span class="fas fa-user-slash" />
                       <input type="checkbox" />
                       <i />
                     </label>
                   </Modal>
 
                   <Modal w="150px" h="50px" bg="#efefef" prefGroup>
-                    <RangeInputLabel>
-                      <RangeInput
-                        type="range"
-                        min={10}
-                        max={120}
-                        step={10}
-                        value={this.props.mpm}
-                        onChange={this.onRangeChange}
-                      />
-                      MPM: {this.props.mpm}
-                    </RangeInputLabel>
+                    <Slider
+                      min={10}
+                      max={60}
+                      step={5}
+                      value={mpm}
+                      tooltip={true}
+                      onChange={this.onRangeChange}
+                    />
                   </Modal>
                 </PrefGroup>
 
                 <PrefGroup msgAttach>
                   <Modal w="600px" h="300px" bg="#efefef" message>
                     <TextInfo>{this.props.message.length}</TextInfo>
+
                     <Message
                       style={{ resize: "none" }}
                       placeholder={`Type your ${
@@ -283,6 +346,7 @@ class SenderPage extends Component {
                       } here...`}
                       onChange={this.onMessageChange}
                     />
+
                     {this.props.sendType === "mail" && (
                       <PrefItem inset onClick={this.toggleMediaGallery}>
                         <i className="fas fa-images" />
@@ -290,16 +354,30 @@ class SenderPage extends Component {
                     )}
                   </Modal>
 
-                  {!!this.props.attachments.length && (
-                    <Modal attachments h="125px" w="auto" bg="#efefef">
-                      {this.props.attachments.map(img => (
-                        <GalleryImage
-                          img={img.url_thumbnail}
-                          onClick={() => this.removeImage(img.id)}
-                        />
-                      ))}
-                    </Modal>
-                  )}
+                  {!!messages.length &&
+                    this.props.sendType === "chat" &&
+                    (messages[0] !== "" && (
+                      <ModalGroup>
+                        {messages.map((msg, idx) => (
+                          <MessageBlock
+                            msg={msg}
+                            clickAdd={this.toggleAttachments}
+                          />
+                        ))}
+                      </ModalGroup>
+                    ))}
+
+                  {!!this.props.attachments.length &&
+                    this.props.sendType === "mail" && (
+                      <Modal attachments h="125px" w="auto" bg="#efefef">
+                        {this.props.attachments.map(img => (
+                          <GalleryImage
+                            img={img.url_thumbnail}
+                            onClick={() => this.removeImage(img.id)}
+                          />
+                        ))}
+                      </Modal>
+                    )}
                 </PrefGroup>
 
                 {this.props.showMediaGallery && (
@@ -312,7 +390,7 @@ class SenderPage extends Component {
                   <ButtonStart onClick={this.startSender}>
                     <i className="far fa-arrow-alt-circle-right" />
                   </ButtonStart>
-                  <Modal w="60px" h="60px" bg="#efefef">
+                  <Modal w="58px" h="58px" bg="#efefef">
                     <PrefItem onClick={this.toggleBlacklist}>
                       <i className="fas fa-ban" />
                     </PrefItem>
@@ -321,6 +399,13 @@ class SenderPage extends Component {
 
                 {!!this.props.showBlacklist && (
                   <Blacklist toggleBlacklist={this.toggleBlacklist} />
+                )}
+
+                {this.props.showAttachments && (
+                  <Attachments
+                    stickers={this.state.packs}
+                    toggleAttachments={this.toggleAttachments}
+                  />
                 )}
               </SenderPrefs>
             </React.Fragment>
@@ -345,7 +430,13 @@ const mapStateToProps = state => ({
   attachments: state.pdReducer.attachments,
   blacklist: state.pdReducer.blacklist,
   sentCount: state.pdReducer.sentCount,
-  senderLaunch: state.pdReducer.senderLaunch
+  senderLaunch: state.pdReducer.senderLaunch,
+  showAttachments: state.uiReducer.showAttachments,
+  selectedMessage: state.pdReducer.selectedMessage,
+  sentMales: state.pdReducer.sentMales,
+  likeUser: state.pdReducer.likeUser,
+  favUser: state.pdReducer.favUser,
+  ignoreBm: state.pdReducer.ignoreBm
 });
 
 export default connect(mapStateToProps)(SenderPage);

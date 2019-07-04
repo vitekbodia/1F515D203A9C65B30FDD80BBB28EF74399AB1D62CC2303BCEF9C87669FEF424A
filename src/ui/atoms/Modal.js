@@ -20,6 +20,13 @@ export const Modal = styled.div`
      margin: auto;
   `}
 
+${({ switches }) =>
+  switches &&
+  `
+    flex-direction: column;
+    justify-content: space-around;
+  `}
+
   ${({ prefGroup }) =>
     prefGroup &&
     `
@@ -36,6 +43,7 @@ ${({ message }) =>
   align-items: center;
     padding: 2px 6px;
     position: relative;
+    margin-bottom: 15px;
   `}
 
 ${({ gallery }) =>
@@ -91,5 +99,29 @@ ${({ blacklist }) =>
   z-index: 10;
   overflow-y: scroll;
 
+  ::-webkit-scrollbar { 
+    display: none; 
+}
   `}
+
+${({ messageBlock }) =>
+  messageBlock &&
+  `
+  padding: 15px;
+  font-weight: bold;
+  margin: 15px;
+  cursor: pointer;
+  position: relative;
+  `}
+`;
+
+export const ModalGroup = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  width: 600px;
+  overflow-y: scroll;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;

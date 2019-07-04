@@ -5,7 +5,6 @@ import {
   ProfileAvatar,
   ProfileText
 } from "../../ui/atoms";
-import { ProfilePageWrapper } from "../../ui/pages";
 import { connect } from "react-redux";
 import { Spring } from "react-spring/renderprops";
 

@@ -4,7 +4,8 @@ import {
   TOGGLE_BLACKLIST,
   TOGGLE_SENDER_PAGE,
   TOGGLE_PROFILE_PAGE,
-  TOGGLE_MAILING_PAGE
+  TOGGLE_MAILING_PAGE,
+  TOGGLE_ATTACHMENTS
 } from "./uiActions";
 
 const initialState = {
@@ -13,11 +14,15 @@ const initialState = {
   showBlacklist: false,
   showProfilePage: true,
   showSenderPage: false,
-  showMailingPage: false
+  showMailingPage: false,
+  showAttachments: false
 };
 
 export default (state = initialState, { type, payload }) => {
   switch (type) {
+    case TOGGLE_ATTACHMENTS:
+      return { ...state, showAttachments: !state.showAttachments };
+
     case TOGGLE_TOP_PANEL:
       return { ...state, showTopPanel: !state.showTopPanel };
 

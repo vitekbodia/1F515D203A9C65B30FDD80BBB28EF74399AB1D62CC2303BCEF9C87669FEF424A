@@ -75,6 +75,19 @@ export const sendMessage = (idMale, idFemale, message, cb) => {
   }).then(res => cb(res.data));
 };
 
+export const sendSticker = (idMale, idFemale, sticker) => {
+  const data = {
+    idMale: idMale,
+    idFemale: idFemale,
+    content: { img: sticker.image, id_sticker: sticker.id }
+  };
+  axs({
+    url: `/operator/add-activity/sticker/${idMale}`,
+    data: data,
+    method: "POST"
+  });
+};
+
 export const sendMail = (
   idFemale,
   idMale,
@@ -98,4 +111,76 @@ export const getMediaGallery = (idFemale, cb) => {
     url: `/upload/get-mail-media-gallery?idUser=${idFemale}`,
     method: "GET"
   }).then(res => cb(res.data.data));
+};
+
+export const getStickers = cb => {
+  axs({
+    url: "/profile/stickers",
+    method: "POST"
+  }).then(res => cb(res.data.data.categories));
+};
+
+export const getBonuses = cb => {
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+
+  let todayDate = {
+    year: today.getFullYear(),
+    month: today.getMonth() + 1,
+    day: today.getHours() < 3 ? today.getDate() - 1 : today.getDate()
+  };
+
+  let tomorrowDate = {
+    year: tomorrow.getFullYear(),
+    month: tomorrow.getMonth() + 1,
+    day: tomorrow.getDate()
+  };
+
+  axs({
+    url: `/statistic/operator?dateFrom=${todayDate.year}-${todayDate.month}-${
+      todayDate.day
+    }&dateTo=${tomorrowDate.year}-${tomorrowDate.month}-${
+      tomorrowDate.day
+    }&groupByDate=0`,
+    method: "GET"
+  }).then(res => cb(res.data.data[0].bonuses));
+};
+
+export const likeMale = (idMale, idFemale) => {
+  const data = {
+    idMale: idMale,
+    idFemale: idFemale,
+    content: { update: {}, id: "", reverse: 0 }
+  };
+
+  axs({
+    url: `/operator/add-activity/like/${idMale}`,
+    method: "POST",
+    data: data
+  });
+};
+
+export const addToFavorites = (idMale, idFemale) => {
+  const data = {
+    idMale: idMale,
+    idFemale: idFemale,
+    content: { update: {}, id: "", reverse: 0 }
+  };
+
+  axs({
+    url: `/operator/add-activity/favorite/${idMale}`,
+    method: "POST",
+    data: data
+  });
+};
+
+export const sendAttach = (idMale, idFemale, attachId, type) => {
+  const data = { id_user: idFemale, content: { id: attachId }, type: type };
+
+  axs({
+    url: `/upload/chat/${idMale}`,
+    method: "POST",
+    data: data
+  });
 };
