@@ -148,12 +148,13 @@ export const sendToChat = (
       console.log("mode: all");
       let idx = 0;
       let splitMessage = messages.split(" @ ");
+      data.users = data.users.filter(x => !!x.is_online)
 
       const interval = setInterval(() => {
         if (!splitMessage.length) {
           sentMales.push(...data.users.map(male => "" + male.id));
           clearInterval(interval);
-          offset = offset - 1;
+          offset = offset + 1;
           sendToChat(
             filters,
             idFemale,
@@ -191,7 +192,7 @@ export const sendToChat = (
         }
 
         if (ignoreBm) {
-          console.log("ignore bm off");
+          console.log("ignore bm on");
           if (bookmarks.includes("" + data.users[idx].id)) {
             console.log("bm mode || bookmark");
             idx++;
@@ -258,12 +259,10 @@ export const sendToChat = (
   }
 };
 
-export const loadBookmars = (bmOffset, bookmarks, cursor, dispatchFn) => {
-  if (bookmarks.length >= 500) {
+export const loadBookmars = (bmOffset, bookmarks, cursor, modelId, dispatchFn) => {
+  if (bookmarks.length >= 1000) {
     return;
   }
-
-  console.log(bookmarks);
 
   fetchMales(
     {
@@ -279,10 +278,13 @@ export const loadBookmars = (bmOffset, bookmarks, cursor, dispatchFn) => {
       for (let bmIdx = 0; bmIdx < data.length; bmIdx++) {
         if (bmIdx === data.length - 1) {
           bmOffset += data.length;
-          loadBookmars(bmOffset, bookmarks, cursor, dispatchFn);
+          loadBookmars(bmOffset, bookmarks, cursor, modelId, dispatchFn);
         }
 
+        
         bookmarks.push("" + data[bmIdx].id);
+
+        console.log('bookmarks :', bookmarks, modelId);
       }
     },
     cursor

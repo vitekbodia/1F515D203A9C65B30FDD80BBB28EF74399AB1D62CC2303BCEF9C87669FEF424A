@@ -50,7 +50,7 @@ class MailingPage extends Component {
           {props => (
             <React.Fragment>
               <ProfileBackground
-                img="https://wallpapersite.com/images/pages/pic_w/18199.jpg"
+                img="https://cdn.wccftech.com/wp-content/uploads/2017/05/iOS-10.3.3-Wallpaper-1-740x740.jpg"
                 style={props}
               />
               <DisplayMessages>

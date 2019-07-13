@@ -20,7 +20,7 @@ export const TextInfoCredits = styled.a`
   bottom: 10px;
   right: 10px;
   font-family: "SF Display", Arial, Helvetica, sans-serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 300;
   opacity: 0.7;
   text-decoration: none;

@@ -153,7 +153,7 @@ class SenderPage extends Component {
         this.props.modeFilters,
         this.props.modelData.id,
         this.props.message,
-        this.props.mode === "all" ? Math.round(data.count / 25) : 0,
+        0,
         this.props.mode,
         this.props.bookmarks,
         "",
@@ -192,7 +192,7 @@ class SenderPage extends Component {
   }
 
   componentDidMount() {
-    loadBookmars(0, this.props.bookmarks, "", this.props.dispatch);
+    loadBookmars(0, this.props.bookmarks, "", this.props.modelData.id, this.props.dispatch);
 
     const loadedBlacklist = localStorage.getItem("blacklist");
 
@@ -220,7 +220,7 @@ class SenderPage extends Component {
           {props => (
             <React.Fragment>
               <ProfileBackground
-                img="https://wallpapersite.com/images/pages/pic_w/18203.jpg"
+                img="https://cdn.wccftech.com/wp-content/uploads/2017/05/iOS-10.3.3-Wallpaper-1-740x740.jpg"
                 style={props}
               />
               <SenderPrefs style={props}>
@@ -254,9 +254,9 @@ class SenderPage extends Component {
                       name="senderMode"
                       id="online"
                       value="online"
-                      onChange={e => this.selectMode(e.target.value)}
+                      // onChange={e => this.selectMode(e.target.value)}
                     />
-                    <PrefItem htmlFor="online">
+                    <PrefItem >
                       <i className="fas fa-user" />
                     </PrefItem>
                     <input
@@ -325,7 +325,7 @@ class SenderPage extends Component {
 
                   <Modal w="150px" h="50px" bg="#efefef" prefGroup>
                     <Slider
-                      min={10}
+                      min={5}
                       max={60}
                       step={5}
                       value={mpm}
