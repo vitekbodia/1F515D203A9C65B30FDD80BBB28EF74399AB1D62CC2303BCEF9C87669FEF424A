@@ -34,7 +34,7 @@ const initialState = {
   },
   mode: "online",
   message: "",
-  mpm: 40,
+  mpm: 2000,
   bookmarks: [],
   sendType: "chat",
   attachments: [],
@@ -101,7 +101,7 @@ export default (state = initialState, { type, payload }) => {
       return { ...state, mode: payload };
 
     case SET_MPM:
-      return { ...state, mpm: payload };
+      return { ...state, mpm: payload};
 
     case SET_BOOKMARKS:
       return { ...state, bookmarks: payload };

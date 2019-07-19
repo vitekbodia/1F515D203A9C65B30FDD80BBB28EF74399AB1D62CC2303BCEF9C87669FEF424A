@@ -9,7 +9,7 @@ export const Message = styled.textarea`
   height: 90%;
   margin: auto 0;
   border: none;
-  color: rgb(28, 28, 30);
+  color: rgb(209, 209, 214);
   font-family: "SF Display", Arial, Helvetica, sans-serif;
   font-weight: 500;
   line-height: 1.3rem;

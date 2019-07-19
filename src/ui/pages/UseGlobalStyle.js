@@ -27,7 +27,7 @@ export const UseGlobalStyle = createGlobalStyle`
   }
 
   .rangeslider__fill {
-    background: rgb(10, 132, 255) !important;
+    background: rgb(88, 86, 214) !important;
   }
 
   .rangeslider__handle {

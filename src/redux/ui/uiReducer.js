@@ -12,8 +12,8 @@ const initialState = {
   showTopPanel: false,
   showMediaGallery: false,
   showBlacklist: false,
-  showProfilePage: true,
-  showSenderPage: false,
+  showProfilePage: false,
+  showSenderPage: true,
   showMailingPage: false,
   showAttachments: false
 };

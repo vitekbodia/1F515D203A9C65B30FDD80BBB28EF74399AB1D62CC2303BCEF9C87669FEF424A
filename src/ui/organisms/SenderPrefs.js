@@ -9,7 +9,7 @@ export const SenderPrefs = styled.div`
   margin: auto;
 
   input:checked + label {
-    background-color: rgb(0, 122, 255);
+    background-color: rgb(88, 86, 214);
     color: white;
     opacity: 1;
   }
@@ -22,7 +22,7 @@ export const SenderPrefs = styled.div`
 export const PrefGroup = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   font-family: "SF Display", Arial, Helvetica,sans-serif;
       ${({ msgAttach }) =>
@@ -50,17 +50,17 @@ export const PrefGroup = styled.div`
 `;
 
 export const PrefItem = styled.label`
-  width: 40px;
-  height: 40px;
-  background: rgb(152, 152, 157);
-  opacity: 0.775;
+  width: 45px;
+  height: 45px;
+  background: rgba(58, 58, 60, 0.5);
   border-radius: 100%;
-  color: black;
-  margin: 15px 10px;
-  font-size: 1.25rem;
+  color: rgba(122, 122, 127, 0.9);
+  margin: 10px;
+  font-size: 1.35rem;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 
   ${({ inset }) =>
     inset &&

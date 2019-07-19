@@ -61,6 +61,10 @@ export const fetchFemaleData = cb =>
     cb(data.data.data.list[0])
   );
 
+export const getLimit = cb => (
+  axs({url: '/social/get-id', method: "POST"}).then(data => cb(data.headers["x-rate-limit-reset"]))
+)
+
 export const sendMessage = (idMale, idFemale, message, cb) => {
   const data = {
     idUserTo: idMale,
@@ -72,7 +76,10 @@ export const sendMessage = (idMale, idFemale, message, cb) => {
     url: `/operator/add-activity/message/${idMale}`,
     data: data,
     method: "POST"
-  }).then(res => cb(res.data));
+  }).then(res => {
+    console.log(res)
+    return cb(res)
+  });
 };
 
 export const sendSticker = (idMale, idFemale, sticker) => {
@@ -102,7 +109,7 @@ export const sendMail = (
     videos: videos
   };
   axs({ url: "/correspondence/send", data: data, method: "POST" }).then(res =>
-    cb(res.data)
+    cb(res)
   );
 };
 

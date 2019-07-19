@@ -11,6 +11,7 @@ export const DisplayMessages = styled.div`
   padding: 20px;
   margin: auto 0;
   z-index: 11;
+  color: white;
 
   ::-webkit-scrollbar {
     display: none;

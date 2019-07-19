@@ -10,7 +10,7 @@ export const NavbarItem = styled.div`
   font-weight: bold;
   margin: 0 20px;
   cursor: pointer;
-  color: rgb(28, 28, 30);
+  color: rgb(209, 209, 214);
 `;
 
 export const NavbarItemIcon = styled.div`

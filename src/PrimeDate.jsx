@@ -1,4 +1,4 @@
-import { fetchFemaleData, getBonuses } from "./api";
+import { fetchFemaleData, getBonuses, getLimit } from "./api";
 import Iframe from "react-iframe";
 import React, { Component } from "react";
 import ProfilePage from "./components/pages/ProfilePage";
@@ -28,14 +28,11 @@ class PrimeDate extends Component {
   }
 
   toggleTopPanel() {
+    getLimit(res => console.log(res))
     return this.props.dispatch({ type: TOGGLE_TOP_PANEL });
   }
 
   countBonuses(update = false) {
-    // const year = datenow.getFullYear();
-    // const month = datenow.getMonth() + 1;
-    // const day = datenow.getDate();
-    // const hours = datenow.getHours();
     return getBonuses(bonuses => {
       const current = this.props.currentBonuses;
       console.log(bonuses - current);
@@ -61,8 +58,6 @@ class PrimeDate extends Component {
       this.props.dispatch({ type: SET_BONUSES, payload: bonuses });
     });
   }
-
-  componentDidUpdate() {}
 
   componentDidMount() {
     setInterval(() => this.countBonuses(true), 2000);

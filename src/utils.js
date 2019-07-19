@@ -35,6 +35,15 @@ export const sendToChat = (
   let idx = 0;
   let splitMessage = messages.split(" @ ");
 
+  const changeLimit = limitData => {
+    limitData = {
+      limit: limitData['x-rate-limit-limit'],
+      remaining: limitData['x-rate-limit-remaining'],
+      reset: limitData['x-rate-limit-reset']
+  }
+  
+}
+
   if (mode !== "all") {
     console.log("mode: online");
     fetchMales(

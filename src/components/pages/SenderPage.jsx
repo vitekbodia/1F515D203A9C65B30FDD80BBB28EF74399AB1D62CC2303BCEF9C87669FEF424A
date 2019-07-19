@@ -10,6 +10,7 @@ import {
   ModalGroup
 } from "../../ui/atoms";
 import { SenderPrefs, PrefItem, PrefGroup } from "../../ui/organisms";
+
 import {
   SET_MODE_FILTERS,
   SET_MESSAGE,
@@ -42,6 +43,9 @@ import Slider from "react-rangeslider";
 import "react-rangeslider/lib/index.css";
 import MessageBlock from "../molecules/MessageBlock";
 import Attachments from "../organisms/Attachments";
+import SendType from "../molecules/SendType";
+import SenderMode from "../molecules/SenderMode";
+import ModeSwitches from "../molecules/ModeSwitches";
 
 class SenderPage extends Component {
   constructor(props) {
@@ -56,19 +60,27 @@ class SenderPage extends Component {
     this.onMessageChange = this.onMessageChange.bind(this);
     this.startSender = this.startSender.bind(this);
     this.onRangeChange = this.onRangeChange.bind(this);
-    this.changeMode = this.changeMode.bind(this);
     this.toggleMediaGallery = this.toggleMediaGallery.bind(this);
     this.toggleBlacklist = this.toggleBlacklist.bind(this);
     this.removeImage = this.removeImage.bind(this);
     this.changeCount = this.changeCount.bind(this);
-    this.toggleOnline = this.toggleOnline.bind(this);
     this.toggleAttachments = this.toggleAttachments.bind(this);
-    this.toggleLike = this.toggleLike.bind(this);
-    this.toggleFavorite = this.toggleFavorite.bind(this);
-    this.toggleIgnoreBm = this.toggleIgnoreBm.bind(this);
   }
 
-  selectMode(value) {
+  toggleAttachments() {
+    return this.props.dispatch({ type: TOGGLE_ATTACHMENTS });
+  }
+
+  onMessageChange(evt) {
+    const { value } = evt.target;
+    return this.props.dispatch({ type: SET_MESSAGE, payload: value });
+  }
+
+  onRangeChange(value) {
+    return this.props.dispatch({ type: SET_MPM, payload: parseInt(value) });
+  }
+
+  selectMode(value, online = 0) {
     let mode;
     let options = {
       bookmarked: 0,
@@ -86,58 +98,22 @@ class SenderPage extends Component {
       case "all":
         mode = "all";
         break;
-      case "bmOnline":
-        options = { ...options, bookmarked: 1, onliners: 1 };
-        mode = "bmOnline";
-        break;
       case "bmAll":
         options = { ...options, bookmarked: 1 };
         mode = "bmAll";
         break;
       case "activeDialogs":
-        options = { ...options, id_dialog: 1 };
+        options = { ...options, nomessages: 1 };
         mode = "activeDialogs";
         break;
     }
 
-    if (!!this.state.online) {
+    if (!!online) {
       options = { ...options, onliners: 1 };
     }
 
     this.props.dispatch({ type: SET_MODE_FILTERS, payload: options });
     this.props.dispatch({ type: SET_MODE, payload: mode });
-  }
-
-  toggleAttachments() {
-    return this.props.dispatch({ type: TOGGLE_ATTACHMENTS });
-  }
-
-  toggleIgnoreBm() {
-    return this.props.dispatch({ type: TOGGLE_IGNORE_BM });
-  }
-
-  toggleOnline() {
-    return async () => {
-      await this.setState({ online: !this.state.online });
-      this.selectMode(this.props.mode);
-    };
-  }
-
-  toggleLike() {
-    return this.props.dispatch({ type: TOGGLE_LIKE });
-  }
-
-  toggleFavorite() {
-    return this.props.dispatch({ type: TOGGLE_FAVORITE });
-  }
-
-  onMessageChange(evt) {
-    const { value } = evt.target;
-    return this.props.dispatch({ type: SET_MESSAGE, payload: value });
-  }
-
-  onRangeChange(value) {
-    return this.props.dispatch({ type: SET_MPM, payload: parseInt(value) });
   }
 
   startSender() {
@@ -174,11 +150,6 @@ class SenderPage extends Component {
     return this.props.dispatch({ type: SET_SENT_COUNT, payload: counter });
   }
 
-  changeMode(evt) {
-    const { value } = evt.target;
-    this.props.dispatch({ type: SET_SEND_TYPE, payload: value });
-  }
-
   toggleMediaGallery() {
     return this.props.dispatch({ type: TOGGLE_MEDIA_GALLERY });
   }
@@ -192,7 +163,13 @@ class SenderPage extends Component {
   }
 
   componentDidMount() {
-    loadBookmars(0, this.props.bookmarks, "", this.props.modelData.id, this.props.dispatch);
+    // loadBookmars(
+    //   0,
+    //   this.props.bookmarks,
+    //   "",
+    //   this.props.modelData.id,
+    //   this.props.dispatch
+    // );
 
     const loadedBlacklist = localStorage.getItem("blacklist");
 
@@ -220,108 +197,14 @@ class SenderPage extends Component {
           {props => (
             <React.Fragment>
               <ProfileBackground
-                img="https://cdn.wccftech.com/wp-content/uploads/2017/05/iOS-10.3.3-Wallpaper-1-740x740.jpg"
+                img="https://wallpapersite.com/images/pages/pic_w/15191.jpg"
                 style={props}
               />
               <SenderPrefs style={props}>
                 <PrefGroup>
-                  <Modal w="150px" h="75px" bg="#efefef" prefGroup>
-                    <input
-                      type="radio"
-                      name="sendType"
-                      id="chat"
-                      value="chat"
-                      onChange={this.changeMode}
-                    />
-                    <PrefItem htmlFor="chat">
-                      <i className="fas fa-comments" />
-                    </PrefItem>
-                    <input
-                      type="radio"
-                      name="sendType"
-                      id="mail"
-                      value="mail"
-                      onChange={this.changeMode}
-                    />
-                    <PrefItem htmlFor="mail">
-                      <i className="fas fa-envelope" />
-                    </PrefItem>
-                  </Modal>
-
-                  <Modal w="150px" h="150px" bg="#efefef" prefGroup>
-                    <input
-                      type="radio"
-                      name="senderMode"
-                      id="online"
-                      value="online"
-                      // onChange={e => this.selectMode(e.target.value)}
-                    />
-                    <PrefItem >
-                      <i className="fas fa-user" />
-                    </PrefItem>
-                    <input
-                      type="radio"
-                      name="senderMode"
-                      id="all"
-                      value="all"
-                      onChange={e => this.selectMode(e.target.value)}
-                    />
-                    <PrefItem htmlFor="all">
-                      <i className="fas fa-users" />
-                    </PrefItem>
-                    <input
-                      type="radio"
-                      name="senderMode"
-                      id="activeDialogs"
-                      value="activeDialogs"
-                      onChange={e => this.selectMode(e.target.value)}
-                    />
-                    <PrefItem htmlFor="activeDialogs">
-                      <i className="fas fa-comment-dots" />
-                    </PrefItem>
-                    <input
-                      type="radio"
-                      name="senderMode"
-                      id="bmAll"
-                      value="bmAll"
-                      onChange={e => this.selectMode(e.target.value)}
-                    />
-                    <PrefItem htmlFor="bmAll">
-                      <i className="fas fa-bookmark" />
-                    </PrefItem>
-                  </Modal>
-
-                  <Modal w="150px" h="135px" bg="#efefef" switches>
-                    <label
-                      className="form-switch"
-                      onChange={this.toggleOnline()}
-                    >
-                      <span class="fas fa-signal" />
-                      <input type="checkbox" />
-                      <i />
-                    </label>
-                    <label className="form-switch" onChange={this.toggleLike}>
-                      <span class="fas fa-heart" />
-                      <input type="checkbox" />
-                      <i />
-                    </label>
-                    <label
-                      className="form-switch"
-                      onChange={this.toggleFavorite}
-                    >
-                      <span class="fas fa-star" />
-                      <input type="checkbox" />
-                      <i />
-                    </label>
-                    <label
-                      className="form-switch"
-                      onChange={this.toggleIgnoreBm}
-                    >
-                      <span class="fas fa-user-slash" />
-                      <input type="checkbox" />
-                      <i />
-                    </label>
-                  </Modal>
+                  <SendType />
+                  <SenderMode selectMode={this.selectMode} />
+                  <ModeSwitches selectMode={this.selectMode} />
 
                   <Modal w="150px" h="50px" bg="#efefef" prefGroup>
                     <Slider
@@ -390,11 +273,9 @@ class SenderPage extends Component {
                   <ButtonStart onClick={this.startSender}>
                     <i className="far fa-arrow-alt-circle-right" />
                   </ButtonStart>
-                  <Modal w="58px" h="58px" bg="#efefef">
-                    <PrefItem onClick={this.toggleBlacklist}>
-                      <i className="fas fa-ban" />
-                    </PrefItem>
-                  </Modal>
+                  <PrefItem onClick={this.toggleBlacklist}>
+                    <i className="fas fa-ban" />
+                  </PrefItem>
                 </PrefGroup>
 
                 {!!this.props.showBlacklist && (

@@ -4,10 +4,9 @@ export const Modal = styled.div`
   display: flex;
   width: ${props => props.w};
   height: ${props => props.h};
-  background: ${props => props.bg};
-  border-radius: 20px;
-  opacity: 0.7;
-  border-radius: 20px;
+  background: rgba(44, 44, 46, 0.5);
+  border-radius: 15px;
+  border-radius: 15px;
   box-shadow: 2px 6px 15px #111111;
   align-items: center;
 
@@ -25,6 +24,8 @@ ${({ switches }) =>
   `
     flex-direction: column;
     justify-content: space-around;
+    // color: rgb(99, 99, 102);
+    color: rgb(142, 142, 147);
   `}
 
   ${({ prefGroup }) =>
@@ -112,6 +113,7 @@ ${({ messageBlock }) =>
   margin: 15px;
   cursor: pointer;
   position: relative;
+  color: rgb(209,209,214);
   `}
 `;
 

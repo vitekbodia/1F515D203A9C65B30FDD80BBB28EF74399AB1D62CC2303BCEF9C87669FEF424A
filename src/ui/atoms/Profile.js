@@ -16,7 +16,7 @@ export const ProfileAvatar = styled.div`
 `;
 
 export const ProfileText = styled.span`
-  color: #333333;
+  color: rgb(209, 209, 214);
   margin: 15px 0;
   font-family: "SF Display", Arial, Helvetica, sans-serif;
 
